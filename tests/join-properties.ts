@@ -1,25 +1,16 @@
 import Grimlock from '../src'
 
-const hello = (who: string): Promise<string> => {
-  return new Promise<string>(resolve => {
-    setTimeout(() => {
-      resolve(`hello ${who}`)
-    }, 50)
-  })
-}
-
 const data = {
   id: 1,
   name: 'John',
   surname: 'Watson',
-  message: 'world',
+  age: 30,
 }
 
 const expected = {
   id: 1,
-  name: 'John',
-  surname: 'Watson',
-  message: 'hello world',
+  full_name: 'John Watson',
+  age: 30,
 }
 
 const data2 = { ...data, id: 2 }
@@ -29,14 +20,13 @@ class Collection extends Grimlock {
   protected schema(data) {
     return {
       id: data.id,
-      name: data.name,
-      surname: data.surname,
-      message: hello(data.message),
+      full_name: `${data.name} ${data.surname}`,
+      age: data.age,
     }
   }
 }
 
-describe('promise', () => {
+describe('join-properties', () => {
   test('object', async () => {
     expect(await new Collection(data).toObject()).toMatchObject(expected)
   })
