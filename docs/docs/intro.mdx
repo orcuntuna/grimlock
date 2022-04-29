@@ -1,0 +1,107 @@
+---
+sidebar_position: 1
+---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+
+
+# Introduction
+
+Grimlock is a data transformer library for NodeJS. This library provides presentation and transformation layer for data outputs.
+Grimlock has been _made for the consistent response of APIs, but you can use for anything in your codebase. It can use relational models, so you can serialize to both raw data and data from the database.
+
+
+## Getting Started
+
+Grimlock also supports the TypesScript. You can download the source code via npm.
+
+```shell
+npm install --save grimlock
+
+/* OR */_
+
+yarn add grimlock
+```
+
+## Basic Usage
+
+Create a new collection with extend to Grimlock class. You can create a new file and export this class.
+
+If you are using CommonJS instead of ES6/TypeScript you should use "require" to import Grimlock.
+
+```js
+/* CommonJS */
+const Grimlock = require("grimlock")
+
+/* OR */
+
+/* ES6/TypeScript */
+import Grimlock from "grimlock"
+```
+
+```typescript
+class UserCollection extends Grimlock {
+  protected schema(data) {
+    return {
+      id: data._id,
+      username: data.username,
+      full_name: `${data.name} ${data.surname}`
+    }
+  }
+}
+```
+
+<Tabs>
+<TabItem value="js" label="Raw Data">
+
+```json
+{
+    "_id": "68022e5b-2b5c-4d82-8719-4e6265181efb",
+    "username": "marry3",
+    "email": "marry@example.com",
+    "password": "aWYgeW91IGxpa2VkIHRoaXMgcGFja2FnZSwgc3RhciBpdCA6KQ=="
+    "name": "Marry",
+    "surname": "Jane"
+}
+```
+
+</TabItem>
+<TabItem value="py" label="Formatted Data">
+
+```json
+{
+    "id": "68022e5b-2b5c-4d82-8719-4e6265181efb",
+    "username": "marry3",
+    "full_name": "Marry Jane"
+}
+```
+
+</TabItem>
+</Tabs>
+
+
+Basically, your collection's class _must have schema function. That's the function that will be used to transform the data.
+
+Grimlock instance has 2 method for return to transformed data. These are `toObject` and `toArray`. If you work with single data, you should use to `toObject` method. However, If you work with multiple data in array, you should use to `toArray` method. `toArray` method maps to transformation schema all items in your array.
+
+Also, these methods only can be used in an async function because the methods return a promise.
+
+**Single data transformation:** `toObject`
+```typescript
+const user = await new UserCollection(rawUser).toObject()
+```
+
+**Multiple data transformation:** `toArray`
+```typescript
+const users = await new UserCollection(rawUsers).toArray()
+```
+
+## What's next?
+
+- Read the [optional properties](https://docusaurus.io/).
+- Read the [](https://docusaurus.io/docs/styling-layout)
+- Add a [search bar](https://docusaurus.io/docs/search)
+- Find inspirations in the [Docusaurus showcase](https://docusaurus.io/showcase)
+- Get involved in the [Docusaurus Community](https://docusaurus.io/community/support)
+
