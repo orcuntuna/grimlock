@@ -7,7 +7,7 @@ Grimlock is a data transformer for JavaScript. It can be used to format your dat
 - [Features](#features)
   - [Key Value Manipulation](#key-value-manipulation)
   - [Optional Values and With](#optional-values-and-with)
-  - [Without](#basic-example)
+  - [Without](#without)
   - [Function Values](#function-values)
   - [Relations](#relations)
 - [License](#license)
@@ -59,7 +59,7 @@ const multiple = new PostCollection(posts).toArray()
 
 - [Key Value Manipulation](#key-value-manipulation)
 - [Optional Values and With](#optional-values-and-with)
-- [Without](#basic-example)
+- [Without](#without)
 - [Function Values](#function-values)
 - [Relations](#relations)
 
