@@ -1,7 +1,6 @@
-import { isPromise } from './helpers/isPromise'
-import { SchemaOutput } from './types/Schema'
-import { Response } from './types/Response'
-import { Data } from './types/Data'
+import type { SchemaOutput } from './types/Schema'
+import type { Response } from './types/Response'
+import type { Data } from './types/Data'
 
 class Grimlock {
   protected optionals: Array<string> = []
@@ -28,14 +27,14 @@ class Grimlock {
     return this
   }
 
-  public async toArray(data = this.data): Promise<Array<Response>> {
+  public toArray(data = this.data): Array<Response> {
     if (!data && !Array.isArray(data)) {
       return []
     }
     return this.prepareItems(data)
   }
 
-  public async toObject(data = this.data): Promise<Response> {
+  public toObject(data = this.data): Response {
     if (!data) {
       return {}
     }
@@ -46,7 +45,7 @@ class Grimlock {
     return item
   }
 
-  private async prepareItem(item: any): Promise<Response> {
+  private prepareItem(item: any): Response {
     item = this.beforeEach(item)
     let schema = this.schema(item)
     const properties = Object.keys(schema).filter(key => {
@@ -63,25 +62,23 @@ class Grimlock {
         return properties.includes(key)
       })
     )
-    schema = await this.execFunctions(schema)
+    schema = this.execFunctions(schema)
     return schema
   }
 
-  private async execFunctions(item: SchemaOutput): Promise<SchemaOutput> {
+  private execFunctions(item: SchemaOutput): SchemaOutput {
     for (const propertyIndex in item) {
       if (item[propertyIndex] && typeof item[propertyIndex] === 'function') {
-        item[propertyIndex] = await item[propertyIndex]()
-      } else if (item[propertyIndex] && isPromise(item[propertyIndex])) {
-        item[propertyIndex] = await item[propertyIndex]
+        item[propertyIndex] = item[propertyIndex]()
       }
     }
     return item
   }
 
-  private async prepareItems(items: Array<any>) {
+  private prepareItems(items: Array<any>) {
     const _items: Array<any> = []
     for (const item of items) {
-      _items.push(await this.prepareItem(item))
+      _items.push(this.prepareItem(item))
     }
     return _items
   }

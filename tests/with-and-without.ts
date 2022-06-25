@@ -36,20 +36,17 @@ class Collection extends Grimlock {
 }
 
 describe('with-and-without', () => {
-  test('object', async () => {
+  test('object', () => {
     expect(
-      await new Collection(data).with('title').without('updatedAt').toObject()
+      new Collection(data).with('title').without('updatedAt').toObject()
     ).toMatchObject(expected)
   })
 
-  test('array', async () => {
+  test('array', () => {
     const dataArray = [data, data2]
     const expectedArray = [expected, expected2]
     expect(
-      await new Collection(dataArray)
-        .with('title')
-        .without('updatedAt')
-        .toArray()
+      new Collection(dataArray).with('title').without('updatedAt').toArray()
     ).toMatchObject(expectedArray)
   })
 })

@@ -35,20 +35,20 @@ class Collection extends Grimlock {
 }
 
 describe('multi-with-and-without', () => {
-  test('object', async () => {
+  test('object', () => {
     expect(
-      await new Collection(data)
+      new Collection(data)
         .with(['title', 'body'])
         .without(['createdAt', 'updatedAt'])
         .toObject()
     ).toMatchObject(expected)
   })
 
-  test('array', async () => {
+  test('array', () => {
     const dataArray = [data, data2]
     const expectedArray = [expected, expected2]
     expect(
-      await new Collection(dataArray)
+      new Collection(dataArray)
         .with(['title', 'body'])
         .without(['createdAt', 'updatedAt'])
         .toArray()

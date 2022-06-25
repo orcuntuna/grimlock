@@ -34,17 +34,15 @@ class Collection extends Grimlock {
 }
 
 describe('with', () => {
-  test('object', async () => {
-    expect(await new Collection(data).with('body').toObject()).toMatchObject(
-      expected
-    )
+  test('object', () => {
+    expect(new Collection(data).with('body').toObject()).toMatchObject(expected)
   })
 
-  test('array', async () => {
+  test('array', () => {
     const dataArray = [data, data2]
     const expectedArray = [expected, expected2]
-    expect(
-      await new Collection(dataArray).with('body').toArray()
-    ).toMatchObject(expectedArray)
+    expect(new Collection(dataArray).with('body').toArray()).toMatchObject(
+      expectedArray
+    )
   })
 })

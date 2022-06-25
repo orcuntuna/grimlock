@@ -37,17 +37,17 @@ class Collection extends Grimlock {
 }
 
 describe('multi-with', () => {
-  test('object', async () => {
+  test('object', () => {
     expect(
-      await new Collection(data).with(['createdAt', 'updatedAt']).toObject()
+      new Collection(data).with(['createdAt', 'updatedAt']).toObject()
     ).toMatchObject(expected)
   })
 
-  test('array', async () => {
+  test('array', () => {
     const dataArray = [data, data2]
     const expectedArray = [expected, expected2]
     expect(
-      await new Collection(dataArray).with(['createdAt', 'updatedAt']).toArray()
+      new Collection(dataArray).with(['createdAt', 'updatedAt']).toArray()
     ).toMatchObject(expectedArray)
   })
 })

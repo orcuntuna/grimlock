@@ -50,15 +50,13 @@ class UserCollection extends Grimlock {
 }
 
 describe('simple', () => {
-  test('object', async () => {
-    expect(await new PostCollection(data).toObject()).toMatchObject(expected)
+  test('object', () => {
+    expect(new PostCollection(data).toObject()).toMatchObject(expected)
   })
 
-  test('array', async () => {
+  test('array', () => {
     const dataArray = [data, data2]
     const expectedArray = [expected, expected2]
-    expect(await new PostCollection(dataArray).toArray()).toMatchObject(
-      expectedArray
-    )
+    expect(new PostCollection(dataArray).toArray()).toMatchObject(expectedArray)
   })
 })
