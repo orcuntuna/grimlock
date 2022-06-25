@@ -17,19 +17,19 @@ Grimlock is a data transformer for JavaScript. It can be used to format your dat
 Using npm:
 
 ```bash
-$ npm install axios
+$ npm install grimlock
 ```
 
 Using yarn:
 
 ```bash
-$ yarn add axios
+$ yarn add grimlock
 ```
 
 Using pnpm:
 
 ```bash
-$ pnpm add axios
+$ pnpm add grimlock
 ```
 
 ## Basic Example
