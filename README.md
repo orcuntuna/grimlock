@@ -207,4 +207,4 @@ class UserCollection extends Grimlock {
 
 ## License
 
-(Apache-2.0 license)[LICENSE]
+[Apache-2.0 license](https://github.com/orcuntuna/grimlock/blob/HEAD/LICENSE)
