@@ -24,8 +24,8 @@ const expected2 = { ...expected, id: 2 }
 class Collection extends Grimlock {
   protected schema(data) {
     return {
-      userId: data.userId,
       id: data.id,
+      userId: data.userId,
       title: data.title,
       body: data.body,
     }

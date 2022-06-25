@@ -1,5 +1,6 @@
 {
   "name": "grimlock",
+  "description": "Grimlock is a relational data transformer for JavaScript",
   "version": "1.0.2",
   "author": "Orçun Tuna",
   "license": "MIT",
@@ -10,7 +11,8 @@
     "format": "prettier --write 'src/**/*.ts'",
     "lint": "eslint",
     "test": "jest --config jestconfig.json",
-    "build": "tsc"
+    "build": "tsc",
+    "prepublishOnly": "npm test && npm run lint && npm run build"
   },
   "devDependencies": {
     "@types/jest": "^27.4.0",
@@ -30,5 +32,8 @@
     "serializer",
     "resource",
     "collection"
+  ],
+  "files": [
+    "lib/**/*"
   ]
 }

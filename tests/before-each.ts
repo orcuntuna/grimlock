@@ -12,8 +12,8 @@ const expected = {
   email: 'nick@example.com',
 }
 
-const data2 = JSON.stringify({...JSON.parse(data), id: 2})
-const expected2 = {...expected, id: 2}
+const data2 = JSON.stringify({ ...JSON.parse(data), id: 2 })
+const expected2 = { ...expected, id: 2 }
 
 class Collection extends Grimlock {
   protected beforeEach(item) {
@@ -37,8 +37,6 @@ describe('before-each', () => {
   test('array', () => {
     const dataArray = [data, data2]
     const expectedArray = [expected, expected2]
-    expect(new Collection(dataArray).toArray()).toMatchObject(
-      expectedArray
-    )
+    expect(new Collection(dataArray).toArray()).toMatchObject(expectedArray)
   })
 })
