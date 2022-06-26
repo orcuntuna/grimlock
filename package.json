@@ -1,7 +1,7 @@
 {
   "name": "grimlock",
   "description": "Grimlock is a relational data transformer for JavaScript",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "author": "Orçun Tuna",
   "license": "MIT",
   "homepage": "https://github.com/orcuntuna/grimlock",

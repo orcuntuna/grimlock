@@ -1,6 +1,6 @@
 # Grimlock
 
-Grimlock is a relational data transformer for JavaScript. It can be used to format your data according to your collection schemas. Grimlock is mostly for back-end usage and provides consistency with the response data of the API.
+Grimlock is a relational data transformer for TypeScript. It can be used to format your data according to your collection schemas. Grimlock is mostly for back-end usage and provides consistency with the response data of the API.
 
 - [Installing](#installing)
 - [Basic Example](#basic-example)
