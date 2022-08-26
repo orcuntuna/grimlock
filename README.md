@@ -170,7 +170,7 @@ const userCollection = {
 In the real world, we have a lot of resource/model and these models are related to each other. Grimlock supports the related collections.
 
 ```typescript jsx
-import Grimlock from "./index";
+import Grimlock from "./Grimlock";
 
 const userCollection = {
   schema: data => ({
