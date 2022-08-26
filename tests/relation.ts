@@ -1,4 +1,5 @@
 import Grimlock from '../src'
+import { Collection } from '../src/types/Collection'
 
 const data = {
   id: 1,
@@ -28,35 +29,35 @@ const expected = {
 const data2 = { ...data, id: 2 }
 const expected2 = { ...expected, id: 2 }
 
-class PostCollection extends Grimlock {
-  protected schema(data) {
-    return {
-      id: data.id,
-      title: data.title,
-      body: data.body,
-      user: new UserCollection(data.user).toObject(),
-    }
-  }
+const userCollection: Collection = {
+  schema: data => ({
+    id: data.id,
+    name: data.name,
+    username: data.username,
+  }),
 }
 
-class UserCollection extends Grimlock {
-  protected schema(data) {
-    return {
-      id: data.id,
-      name: data.name,
-      username: data.username,
-    }
-  }
+const postCollection: Collection = {
+  schema: data => ({
+    id: data.id,
+    title: data.title,
+    body: data.body,
+    user: new Grimlock(data.user, userCollection).toObject(),
+  }),
 }
 
 describe('simple', () => {
   test('object', () => {
-    expect(new PostCollection(data).toObject()).toMatchObject(expected)
+    expect(new Grimlock(data, postCollection).toObject()).toMatchObject(
+      expected
+    )
   })
 
   test('array', () => {
     const dataArray = [data, data2]
     const expectedArray = [expected, expected2]
-    expect(new PostCollection(dataArray).toArray()).toMatchObject(expectedArray)
+    expect(new Grimlock(dataArray, postCollection).toArray()).toMatchObject(
+      expectedArray
+    )
   })
 })

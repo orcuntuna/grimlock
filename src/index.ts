@@ -1,20 +1,20 @@
 import type { SchemaOutput } from './types/Schema'
 import type { Response } from './types/Response'
 import type { Data } from './types/Data'
+import { Collection } from './types/Collection'
 
 class Grimlock {
-  protected optionals: Array<string> = []
-  protected data: Data
+  private optionals: Array<string> = []
+  private data: Data
+  private readonly schema: (data: Data) => SchemaOutput
 
   private includes: Array<string> = []
   private excludes: Array<string> = []
 
-  constructor(data: Data) {
+  constructor(data: Data, collection: Collection) {
     this.data = data
-  }
-
-  protected schema(_data: Data): SchemaOutput {
-    return {}
+    this.optionals = collection.optionals || []
+    this.schema = collection.schema
   }
 
   public with(property: string | Array<string>) {
@@ -41,12 +41,7 @@ class Grimlock {
     return this.prepareItem(data)
   }
 
-  protected beforeEach<T>(item: T): T {
-    return item
-  }
-
   private prepareItem(item: any): Response {
-    item = this.beforeEach(item)
     let schema = this.schema(item)
     const properties = Object.keys(schema).filter(key => {
       if (this.excludes.includes(key)) {
@@ -62,11 +57,11 @@ class Grimlock {
         return properties.includes(key)
       })
     )
-    schema = this.execFunctions(schema)
+    schema = Grimlock.execFunctions(schema)
     return schema
   }
 
-  private execFunctions(item: SchemaOutput): SchemaOutput {
+  private static execFunctions(item: SchemaOutput): SchemaOutput {
     for (const propertyIndex in item) {
       if (item[propertyIndex] && typeof item[propertyIndex] === 'function') {
         item[propertyIndex] = item[propertyIndex]()

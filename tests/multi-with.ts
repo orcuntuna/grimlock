@@ -1,4 +1,5 @@
 import Grimlock from '../src'
+import { Collection } from '../src/types/Collection'
 
 const data = {
   userId: 1,
@@ -22,25 +23,22 @@ const expected = {
 const data2 = { ...data, id: 2 }
 const expected2 = { ...expected, id: 2 }
 
-class Collection extends Grimlock {
-  protected optionals = ['userId', 'createdAt', 'updatedAt']
-
-  protected schema(data) {
-    return {
-      userId: data.userId,
-      id: data.id,
-      title: data.title,
-      body: data.body,
-      createdAt: data.createdAt,
-      updatedAt: data.updatedAt,
-    }
-  }
+const collection: Collection = {
+  optionals: ['userId', 'createdAt', 'updatedAt'],
+  schema: data => ({
+    userId: data.userId,
+    id: data.id,
+    title: data.title,
+    body: data.body,
+    createdAt: data.createdAt,
+    updatedAt: data.updatedAt,
+  }),
 }
 
 describe('multi-with', () => {
   test('object', () => {
     expect(
-      new Collection(data).with(['createdAt', 'updatedAt']).toObject()
+      new Grimlock(data, collection).with(['createdAt', 'updatedAt']).toObject()
     ).toMatchObject(expected)
   })
 
@@ -48,7 +46,9 @@ describe('multi-with', () => {
     const dataArray = [data, data2]
     const expectedArray = [expected, expected2]
     expect(
-      new Collection(dataArray).with(['createdAt', 'updatedAt']).toArray()
+      new Grimlock(dataArray, collection)
+        .with(['createdAt', 'updatedAt'])
+        .toArray()
     ).toMatchObject(expectedArray)
   })
 })

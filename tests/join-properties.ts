@@ -1,4 +1,5 @@
 import Grimlock from '../src'
+import { Collection } from '../src/types/Collection'
 
 const data = {
   id: 1,
@@ -16,24 +17,24 @@ const expected = {
 const data2 = { ...data, id: 2 }
 const expected2 = { ...expected, id: 2 }
 
-class Collection extends Grimlock {
-  protected schema(data) {
-    return {
-      id: data.id,
-      full_name: `${data.name} ${data.surname}`,
-      age: data.age,
-    }
-  }
+const collection: Collection = {
+  schema: data => ({
+    id: data.id,
+    full_name: `${data.name} ${data.surname}`,
+    age: data.age,
+  }),
 }
 
 describe('join-properties', () => {
   test('object', () => {
-    expect(new Collection(data).toObject()).toMatchObject(expected)
+    expect(new Grimlock(data, collection).toObject()).toMatchObject(expected)
   })
 
   test('array', () => {
     const dataArray = [data, data2]
     const expectedArray = [expected, expected2]
-    expect(new Collection(dataArray).toArray()).toMatchObject(expectedArray)
+    expect(new Grimlock(dataArray, collection).toArray()).toMatchObject(
+      expectedArray
+    )
   })
 })
