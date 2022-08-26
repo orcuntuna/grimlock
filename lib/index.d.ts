@@ -1,20 +1,19 @@
-import type { SchemaOutput } from './types/Schema';
 import type { Response } from './types/Response';
 import type { Data } from './types/Data';
+import { Collection } from './types/Collection';
 declare class Grimlock {
-    protected optionals: Array<string>;
-    protected data: Data;
+    private optionals;
+    private data;
+    private readonly schema;
     private includes;
     private excludes;
-    constructor(data: Data);
-    protected schema(_data: Data): SchemaOutput;
+    constructor(data: Data, collection: Collection);
     with(property: string | Array<string>): this;
     without(property: string | Array<string>): this;
     toArray(data?: any): Array<Response>;
     toObject(data?: any): Response;
-    protected beforeEach<T>(item: T): T;
     private prepareItem;
-    private execFunctions;
+    private static execFunctions;
     private prepareItems;
 }
 export default Grimlock;
