@@ -10,6 +10,7 @@ Grimlock is a relational data transformer for TypeScript. It can be used to form
   - [Without](#without)
   - [Function Values](#function-values)
   - [Relations](#relations)
+- [API](#api)
 - [License](#license)
 
 ## Installing
@@ -37,22 +38,20 @@ $ pnpm add grimlock
 ```typescript jsx
 import Grimlock from 'grimlock'
 
-class PostCollection extends Grimlock {
-  protected schema(data) {
-    return {
-      id: data.id,
-      userId: data.userId,
-      title: data.title,
-      body: data.body
-    }
-  }
+const simpleCollection = {
+  schema: data => ({
+    id: data.id,
+    userId: data.userId,
+    title: data.title,
+    body: data.body
+  }),
 }
 
 // Object transformation
-const single = new PostCollection(post).toObject()
+const single = new Grimlock(post, simpleCollection).toObject()
 
 // Array<Object> transformation
-const multiple = new PostCollection(posts).toArray()
+const multiple = new Grimlock(posts, simpleCollection).toArray()
 ```
 
 ## Features
@@ -68,17 +67,15 @@ const multiple = new PostCollection(posts).toArray()
 The output value and the input value do not have to be the same. In this example input data has the `name` and `surname` but output data has the `full_name`.
 
 ```typescript jsx
-class Collection extends Grimlock {
-  protected schema(data) {
-    return {
-      id: data.id,
-      full_name: `${data.name} ${data.surname}`,
-      age: data.age,
-    }
-  }
+const userCollection = {
+  schema: data => ({
+    id: data.id,
+    full_name: `${data.name} ${data.surname}`,
+    age: data.age,
+  }),
 }
 
-const data = new Collection(user).toObject()
+const data = new Grimlock(user, userCollection).toObject()
 ```
 
 | Input Data                                         | Output Data                    |
@@ -92,20 +89,17 @@ If you need optional properties in your collection, you should add your keys of 
 If you want to include this optional data later, you can use `with` method. `with` method can be use with single or multiple property.
 
 ```typescript jsx
-class Collection extends Grimlock {
-  protected optionals = ['title', 'body']
-  
-  protected schema(data) {
-    return {
-      id: data.id,
-      userId: data.userId,
-      title: data.title,
-      body: data.body,
-    }
-  }
+const postCollection = {
+  optionals: ['title', 'body'],
+  schema: data => ({
+    id: data.id,
+    userId: data.userId,
+    title: data.title,
+    body: data.body,
+  }),
 }
 
-const data = new Collection(post).with('title').toObject()
+const data = new Grimlock(post, postCollection).with('title').toObject()
 ```
 
 | Input Data                                            | Output Data                                    |
@@ -117,7 +111,7 @@ In that case, `title` and `body` are optional but `title` has been added into th
 **Note:** An array can be sent to `with` method for add more than one optional value.
 
 ```typescript jsx
-const data = new Collection(post).with(['title', 'body']).toObject()
+const data = new Grimlock(post, postCollection).with(['title', 'body']).toObject()
 ```
 
 ### Without
@@ -125,36 +119,33 @@ const data = new Collection(post).with(['title', 'body']).toObject()
 Sometimes you may not need some properties. `without` method excludes some properties from output data during translation. These properties do not have to be optional, available for all properties.
 
 ```typescript jsx
-class Collection extends Grimlock {
-  protected optionals = ['title', 'body']
-  
-  protected schema(data) {
-    return {
-      id: data.id,
-      userId: data.userId,
-      title: data.title,
-      body: data.body,
-    }
-  }
+const postCollection = {
+  optionals: ['title', 'body'],
+  schema: data => ({
+    id: data.id,
+    userId: data.userId,
+    title: data.title,
+    body: data.body,
+  }),
 }
 
-const data = new Collection(post).without('userId').toObject()
+const data = new Grimlock(post, postCollection).without('userId').toObject()
 ```
 
-| Input Data                                            | Output Data                 |
-|-------------------------------------------------------|-----------------------------|
-| - id<br/>- userId<br/>- title<br/>- body<br/>- rating | - id<br/>- title<br/>- body |
+| Input Data                                            | Output Data     |
+|-------------------------------------------------------|-----------------|
+| - id<br/>- userId<br/>- title<br/>- body<br/>- rating | - id            |
 
 **Note:** An array can be sent to `without` method for add more than one optional value like `with`.
 
 ```typescript jsx
-const data = new Collection(post).without(['id', 'userId']).toObject()
+const data = new Grimlock(post, postCollection).without(['id', 'userId']).toObject()
 ```
 
 **Note**: You can use `with` and `without` at the same time.
 
 ```typescript jsx
-const data = new Collection(post).with(['title', 'body']).without(['id', 'userId']).toObject()
+const data = new Grimlock(post, postCollection).with(['title', 'body']).without(['id', 'userId']).toObject()
 ```
 
 ### Function Values
@@ -162,17 +153,15 @@ const data = new Collection(post).with(['title', 'body']).without(['id', 'userId
 If a value is a function in the collection schema, Grimlock run this function and use returned value. Async functions and promises aren't support yet.
 
 ```typescript jsx
-class Collection extends Grimlock {
-  protected schema(data) {
-    return {
-      id: data.id,
-      name: data.name,
-      surname: data.surname,
-      age: function () {
-        return new Date().getFullYear() - data.birthday
-      },
-    }
-  }
+const userCollection = {
+  schema: data => ({
+    id: data.id,
+    name: data.name,
+    surname: data.surname,
+    age: function () {
+      return new Date().getFullYear() - data.birthday
+    },
+  }),
 }
 ```
 
@@ -181,29 +170,47 @@ class Collection extends Grimlock {
 In the real world, we have a lot of resource/model and these models are related to each other. Grimlock supports the related collections.
 
 ```typescript jsx
-class PostCollection extends Grimlock {
-  protected schema(data) {
-    return {
-      id: data.id,
-      title: data.title,
-      body: data.body,
-      user: new UserCollection(data.user).toObject(),
-    }
-  }
+import Grimlock from "./index";
+
+const userCollection = {
+  schema: data => ({
+    id: data.id,
+    name: data.name,
+    username: data.username,
+  }),
 }
 
-class UserCollection extends Grimlock {
-  protected schema(data) {
-    return {
-      id: data.id,
-      name: data.name,
-      username: data.username,
-    }
-  }
+const postCollection = {
+  schema: data => ({
+    id: data.id,
+    title: data.title,
+    body: data.body,
+    user: new Grimlock(data.user, userCollection).toObject(),
+  }),
 }
 ```
 
 **Note:** Not only `toObject` but also `toArray` can be used in the collection.
+
+## API
+
+**Properties of Collection object:**
+
+| Property  | Type            | Description                                                                          | Required | Default Value       |
+|-----------|-----------------|--------------------------------------------------------------------------------------|----------|---------------------|
+| optionals | Array<*String*> | Values that are not included in the output by default but can be optionally included | False    | []                  |
+| schema    | Function        | Is the schema that will generate the output. It must return an object.               | True     | (data) => {}        |
+
+
+**Methods of Grimlock class:**
+
+| Property | Params                    | Description                                                             |
+|----------|---------------------------|-------------------------------------------------------------------------|
+| with     | String or Array<*String*> | It allows to include properties in the output from optional properties. |
+| without  | String or Array<*String*> | Deletes the values you don't want in the output.                        |
+| toObject | -                         | Returns a single result for a collection.                               |
+| toArray  | -                         | Returns multiple results in an array for a collection.                  |
+
 
 ## License
 
